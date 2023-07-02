@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mobiz-Advanced-Meme-Viewing-Tool</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/futura-font@1.0.0/styles.min.css">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: FuturaBT-Medium;
+    }
+    div {
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25098);
+        padding: 10px;
+        text-align: left;
+        margin-top: 20px;
+        border-radius: 2.5px;
+        background: white;
+    }
+    #container, #loader {
+        margin: auto;
+        max-width: 400px;
+    }
+    .image {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 0px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: black;
+    background-position: center;
+    margin-left: -10px;
+    box-shadow: none;
+    }
+    html {
+    	background: ghostwhite;
+    }
+    #header {
+        background: white;
+        padding: 10px;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25098);
+    }
+</style>
+</head>
+<body>
+
+<center id="header">
+	<h3>Mobiz-Advanced-Meme-Viewing-Tool</h3>
+</center>
+
+<center id="container">
+
+</center>
+
+<center id="loader">
+    <br><progress></progress><br>
+</center>
+
+<script>
+let loadedmemes = []
+
+async function fetchMemes() {
+ let response = await fetch('https://meme-api.com/gimme');
+ let jsonData = await response.json();
+ let container = document.getElementById('container');
+
+ if (loadedmemes.includes(jsonData.title)) {return 0}
+
+ let imageURL = jsonData.preview[jsonData.preview.length - 1];
+
+ let div = document.createElement('div')
+ div.innerHTML = `
+    <h4>${jsonData.author}</h4>
+    r/${jsonData.subreddit}<br>
+    <a href="${jsonData.postLink}"><div style="background-image:url(${imageURL});" class="image"></div></a>
+    ${jsonData.title}
+ `
+ loadedmemes.push(jsonData.title)
+ container.appendChild(div)
+}
+
+for (let i = 0; i < 10; i++) {
+  fetchMemes()
+}
+
+document.addEventListener('DOMContentLoaded', function(e) {
+    document.addEventListener('scroll', function(e) {
+        let documentHeight = document.body.scrollHeight;
+        let currentScroll = window.scrollY + window.innerHeight;
+        let modifier = 200; 
+        if(currentScroll + modifier > documentHeight) {
+	fetchMemes()
+        }
+    })
+})
+</script>
+
+</body>
+</html>
