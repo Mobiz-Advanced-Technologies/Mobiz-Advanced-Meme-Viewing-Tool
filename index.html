@@ -66,7 +66,7 @@ async function fetchMemes() {
  let jsonData = await response.json();
  let container = document.getElementById('container');
 
- if (loadedmemes.includes(jsonData.title)) {return 0}
+ if (loadedmemes.includes(jsonData.title)) {fetchMemes(); return 0}
 
  let imageURL = jsonData.preview[jsonData.preview.length - 1];
 
